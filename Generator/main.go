@@ -14,7 +14,7 @@ import (
 )
 
 //
-//go run .\main.go .\constVar.go
+//go run .\main.go .\constVar.go .\random.go .\generate.go .\file.go
 
 func main() {
 	a := app.New()
@@ -28,7 +28,7 @@ func main() {
  \———  /   |——|————/\———  >——————— \————/ \———  >——|— \\———  >——|   
      \/                 \/        \/          \/     \/    \/   
 
-InvFileLocker originally by leeya_bug ` + VERSION)
+InvFileLocker originally` + VERSION)
 	header.TextStyle.Monospace = true
 
 	//加密算法列
@@ -90,10 +90,15 @@ InvFileLocker originally by leeya_bug ` + VERSION)
 			error_tips_multiline_text += "*获取到路径：" + path + endl
 		}
 
-		fmt.Println(aes_min)
-		error_tips_multiline.SetText(error_tips_multiline_text)
-		error_tips.Text += "*生成成功，请在同路径下查看"
-		error_tips.Color = color.NRGBA{0, 0x80, 0, 0xff}
+		encryptor_path, decryptor_path, err := generate(path_slice, aes_min, multi_thread_start_choice.Checked)
+		if err != nil {
+			error_tips_multiline.SetText(error_tips_multiline_text)
+			error_tips.Text += "*生成失败: " + err.Error()
+		} else {
+			error_tips_multiline.SetText(error_tips_multiline_text)
+			error_tips.Text += fmt.Sprintf("*生成成功，加密器: %s, 解密器: %s", encryptor_path, decryptor_path)
+			error_tips.Color = color.NRGBA{0, 0x80, 0, 0xff}
+		}
 	})
 
 	w.SetContent(container.NewVBox(

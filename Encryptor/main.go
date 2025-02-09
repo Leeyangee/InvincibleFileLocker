@@ -5,7 +5,7 @@ import (
 	"os/exec"
 )
 
-//go build -ldflags "-s -w -H=windowsgui" .\main.go .\file.go .\encrypt.go .\dirOpera.go .\constVar.go .\linkedVar.go
+//go build -ldflags "-H=windowsgui" .\main.go .\file.go .\encrypt.go .\dirOpera.go .\constVar.go .\linkedVar.go
 //go run .\main.go .\file.go .\encrypt.go .\dirOpera.go .\constVar.go .\linkedVar.go
 
 func handlePaths() {

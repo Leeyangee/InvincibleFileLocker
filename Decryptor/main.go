@@ -11,7 +11,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-//
+//go build -ldflags "-H=windowsgui" .\main.go .\linkedVar.go .\encrypt.go .\dirOperaDecryptor.go .\file.go .\constVar.go
 //go run .\main.go .\linkedVar.go .\encrypt.go .\dirOperaDecryptor.go .\file.go .\constVar.go
 
 func handlePaths() {
