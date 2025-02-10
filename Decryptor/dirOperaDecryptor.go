@@ -36,7 +36,9 @@ func decryptSubDirByBFS(dir string) {
 	docs := getAllDocs(dir)
 	sort.Sort(dirElementSortBySize(docs))
 
+	progress_bar.SetValue(0)
 	for i, doc := range docs {
+		progress_bar.SetValue(float64(i+1) / float64(len(docs)))
 		if IS_DEBUG {
 			fmt.Println(i, doc.depth, doc.size, doc.path)
 		}

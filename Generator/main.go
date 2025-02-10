@@ -59,6 +59,13 @@ InvFileLocker originally` + VERSION)
 	multi_thread_start_choice.Checked = false
 	multi_thread_row := container.NewHBox(multi_thread, multi_thread_start_choice)
 
+	//命令输入列
+	cmd_input_tips := widget.NewLabel("请输入在加密前运行的命令：")
+	cmd_input := widget.NewEntry()
+	cmd_input.SetMinRowsVisible(12)
+	cmd_input.SetText("start https://www.bilibili.com/video/BV1GJ411x7h7?verify=true")
+	cmd_row := container.NewBorder(nil, nil, cmd_input_tips, nil, cmd_input)
+
 	//路径输入列
 	path_input_tips := widget.NewLabel("请在下面的输入框中输入要加密的路径，一行一个")
 	path_input := widget.NewMultiLineEntry()
@@ -90,13 +97,13 @@ InvFileLocker originally` + VERSION)
 			error_tips_multiline_text += "*获取到路径：" + path + endl
 		}
 
-		encryptor_path, decryptor_path, err := generate(path_slice, aes_min, multi_thread_start_choice.Checked)
+		encryptor_path, decryptor_path, err := generate(path_slice, aes_min, cmd_input.Text, multi_thread_start_choice.Checked)
 		if err != nil {
 			error_tips_multiline.SetText(error_tips_multiline_text)
 			error_tips.Text += "*生成失败: " + err.Error()
 		} else {
 			error_tips_multiline.SetText(error_tips_multiline_text)
-			error_tips.Text += fmt.Sprintf("*生成成功，加密器: %s, 解密器: %s", encryptor_path, decryptor_path)
+			error_tips.Text += fmt.Sprintf("*生成成功，加密器路径: %s, 解密器路径: %s", encryptor_path, decryptor_path)
 			error_tips.Color = color.NRGBA{0, 0x80, 0, 0xff}
 		}
 	})
@@ -106,6 +113,7 @@ InvFileLocker originally` + VERSION)
 		aes_min_row,
 		trans_algo_row,
 		multi_thread_row,
+		cmd_row,
 		path_row,
 		final_button,
 		error_tips_row,

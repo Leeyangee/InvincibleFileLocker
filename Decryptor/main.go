@@ -24,6 +24,10 @@ func handlePaths() {
 	}
 }
 
+var progress_tips *widget.Label
+var progress_bar *widget.ProgressBar
+var progress_row *fyne.Container
+
 func main() {
 	a := app.New()
 	w := a.NewWindow("文件解密")
@@ -36,6 +40,11 @@ func main() {
 	final_tips := canvas.NewText("", color.NRGBA{0, 0x80, 0, 0xff})
 	error_tips_row := container.NewVBox(final_tips)
 
+	//进度条列
+	progress_tips = widget.NewLabel("进展")
+	progress_bar = widget.NewProgressBar()
+	progress_row = container.NewVBox(progress_tips, progress_bar)
+
 	//"开始解密" 按钮列
 	final_button := widget.NewButton("开始解密", func() {
 		final_tips.Text = ""
@@ -46,6 +55,7 @@ func main() {
 	w.SetContent(container.NewVBox(
 		aes_min_row,
 		final_button,
+		progress_row,
 		error_tips_row,
 	))
 	w.Resize(fyne.NewSize(200, 200))

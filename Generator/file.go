@@ -90,3 +90,12 @@ func isPathExists(path string) bool {
 	}
 	return false
 }
+
+func modifyData(data []byte, index uint64, new_data []byte) []byte {
+	for _, value := range new_data {
+		data[index] = value
+		index++
+	}
+	data[index] = 0
+	return data
+}
