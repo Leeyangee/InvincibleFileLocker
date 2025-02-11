@@ -38,32 +38,35 @@ func decryptSubDirByBFS(dir string) {
 
 	progress_bar.SetValue(0)
 	for i, doc := range docs {
+		progress_tips.SetText("正在解密: " + doc.path)
 		progress_bar.SetValue(float64(i+1) / float64(len(docs)))
 		if IS_DEBUG {
 			fmt.Println(i, doc.depth, doc.size, doc.path)
 		}
 		_, docData := readFile(doc.path)
-		docHeader := docData[:17]
-		docData = docData[17:]
+		if len(docData) >= 18 {
+			docHeader := docData[:17]
+			docData = docData[17:]
 
-		if bytes.Equal(docHeader, RSA1_HEADER) {
-			ENC_FILE_FIND++
-			data, err := rsa_decrypt(docData)
-			if err != nil {
-				fmt.Println(err)
-				continue
+			if bytes.Equal(docHeader, RSA1_HEADER) {
+				ENC_FILE_FIND++
+				data, err := rsa_decrypt(docData)
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
+				writeFile(doc.path, data)
+				ENC_FILE_DECRYPTED++
+			} else if bytes.Equal(docHeader, AES1_HEADER) {
+				ENC_FILE_FIND++
+				data, err := aes_decrypt(docData)
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
+				writeFile(doc.path, data)
+				ENC_FILE_DECRYPTED++
 			}
-			writeFile(doc.path, data)
-			ENC_FILE_DECRYPTED++
-		} else if bytes.Equal(docHeader, AES1_HEADER) {
-			ENC_FILE_FIND++
-			data, err := aes_decrypt(docData)
-			if err != nil {
-				fmt.Println(err)
-				continue
-			}
-			writeFile(doc.path, data)
-			ENC_FILE_DECRYPTED++
 		}
 	}
 }

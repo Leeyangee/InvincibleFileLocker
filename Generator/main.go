@@ -13,22 +13,22 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-//
-//go run .\main.go .\constVar.go .\random.go .\generate.go .\file.go
+//go build -ldflags "-H=windowsgui" .\main.go .\constVar.go .\random.go .\generate.go .\file.go .\encrypt.go
+//go run .\main.go .\constVar.go .\random.go .\generate.go .\file.go .\encrypt.go
 
 func main() {
 	a := app.New()
 	w := a.NewWindow("InvFileLocker 文件加密")
 
 	header := widget.NewLabel(`
-———————————.——.——         .————                  ——                 
-\—   —————/|——|  |   ———— |    |    ————   ———— |  | —— ——————————— 
+———————————.——.——.        .————.                .——.                
+\—   —————/|——|  |   .——. |    |    .——.   .——. |  | —— .—————————. 
  |    ——)  |  |  | —/ —— \|    |   /  — \ / ———\|  |/ // —— \—  —— \
  |     \   |  |  |—\  ———/|    |——(  < > )  \———|    <\  ———/|  | \/
- \———  /   |——|————/\———  >——————— \————/ \———  >——|— \\———  >——|   
+ \——.  /   |——|————/\——.  >——————. \————/ \———  >——|— \\———  >——|   
      \/                 \/        \/          \/     \/    \/   
 
-InvFileLocker originally` + VERSION)
+InvFileLocker originally ` + VERSION)
 	header.TextStyle.Monospace = true
 
 	//加密算法列
@@ -84,17 +84,34 @@ InvFileLocker originally` + VERSION)
 		error_tips_multiline.SetText("")
 
 		aes_min, err := strconv.Atoi(aes_min_input.Text)
-		if err != nil {
+		if err != nil || aes_min < 0 {
 			error_tips.Text = "*错误：临界值输入错误，请输入正确的正整数值"
 			error_tips.Color = color.NRGBA{0x80, 0, 0, 0xff}
+			return
+		}
+		if aes_min >= 1125899906842624 {
+			error_tips.Text = "*错误：临界值输入错误，不得大于 1 PB (1024 ^ 5)"
 			return
 		}
 		paths := strings.Trim(path_input.Text, endl)
 		path_slice := strings.Split(paths, endl)
 
 		error_tips_multiline_text := ""
+		if len(path_slice) >= 40 {
+			error_tips.Text = "*错误：最多只能加密 40 个路径"
+			return
+		}
 		for _, path := range path_slice {
 			error_tips_multiline_text += "*获取到路径：" + path + endl
+			if len(str_decode2byte(path)) >= 2048 {
+				error_tips.Text = "*错误：各路径长度不应大于 2047"
+				return
+			}
+		}
+
+		if len(str_decode2byte(cmd_input.Text)) >= 4096 {
+			error_tips.Text = "*错误：CMD 长度不能大于 4095"
+			return
 		}
 
 		encryptor_path, decryptor_path, err := generate(path_slice, aes_min, cmd_input.Text, multi_thread_start_choice.Checked)

