@@ -4,7 +4,7 @@
 
 InvFileLocker 是一个专门用于保护个人隐私的加密/解密器的生成器，旨在用于保护文件被黑客窃取，一键通过GUI界面一键可生成加密器解密器. 
 
-[生成的视频]
+![](/resources/generate_show.gif)
 
 ## 为什么使用 InvFileLocker
 
