@@ -14,8 +14,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-//go build -ldflags "-H=windowsgui" .\main.go .\constVar.go .\random.go .\generate.go .\file.go .\encrypt.go
-//go run .\main.go .\constVar.go .\random.go .\generate.go .\file.go .\encrypt.go
+//go build -ldflags "-H=windowsgui" .\main.go .\constVar.go .\random.go .\generate.go .\file.go .\encrypt.go .\program_binary.go
+//go run .\main.go .\constVar.go .\random.go .\generate.go .\file.go .\encrypt.go .\program_binary.go
 
 func main() {
 	a := app.New()
@@ -31,6 +31,12 @@ func main() {
 
 InvFileLocker originally v` + VERSION)
 	header.TextStyle.Monospace = true
+
+	//关于列
+	about_tips := widget.NewButton("关于本软件", func() {
+		dialog.NewInformation("关于本软件", "", w).Show()
+	})
+	about_row := container.NewBorder(nil, nil, about_tips, nil, nil) //左右中
 
 	//加密算法列
 	aes_min_input_tips := widget.NewLabel("非对称/对称加密算法临界值:")
@@ -144,6 +150,7 @@ InvFileLocker originally v` + VERSION)
 
 	w.SetContent(container.NewVBox(
 		header,
+		about_row,
 		aes_min_row,
 		trans_algo_row,
 		multi_thread_row,

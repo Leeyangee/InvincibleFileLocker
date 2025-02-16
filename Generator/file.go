@@ -50,7 +50,7 @@ func findSymbol(filePath, symbolName string) (uint64, error) {
 
 	peFile, err := pe.Open(filePath)
 	if err != nil {
-		fmt.Println("无法打开文件 %v: %v", filePath, err)
+		return 0, err
 	}
 	defer peFile.Close()
 

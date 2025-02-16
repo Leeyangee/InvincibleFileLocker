@@ -4,7 +4,7 @@
 
 InvFileLocker 是一个专门用于保护个人隐私的加密/解密器的生成器，旨在用于保护文件被黑客窃取，一键通过GUI界面一键可生成加密器解密器. 
 
-![](/resources/generate_show.gif)
+![](/resources/generate_show_small.gif)
 
 ## 为什么使用 InvFileLocker
 
@@ -12,7 +12,22 @@ InvFileLocker 是一个专门用于保护个人隐私的加密/解密器的生�
 2. 逻辑简单，特征简单，不会被杀软误判为病毒
 3. 持续的后期更新及维护
    
-[生成的视频]
+加密器演示: 
+
+![](/resources/encryptor_show.gif)
+
+解密器演示: 
+
+![](/resources/decryptor_show.gif)
+
+## 手动生成
+
+由于本项目较为简单，因此仅仅对 go 文件简单分文件夹管理，只需要运行 /Generator/GeneratorScript.py 即可生成生成器(请确保在生成前安装了 go1.19.1 windows/amd64 或以上版本、python3.6 或以上版本)
+
+```bash
+cd Generator
+python GeneratorScript.py
+```
 
 ## 声明
 

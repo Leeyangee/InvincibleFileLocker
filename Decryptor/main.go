@@ -47,6 +47,8 @@ func main() {
 
 	//"开始解密" 按钮列
 	final_button := widget.NewButton("开始解密", func() {
+		ENC_FILE_FIND = 0
+		ENC_FILE_DECRYPTED = 0
 		final_tips.Text = ""
 		handlePaths()
 		final_tips.Text = fmt.Sprintf("*发现 %d 个加密文件，成功解密 %d 个", ENC_FILE_FIND, ENC_FILE_DECRYPTED)
