@@ -11,7 +11,7 @@ import (
 func readFile(filePath string) (int, []byte) {
 	data, err := os.ReadFile(filePath)
 	if err != nil {
-		fmt.Println("读取文件失败:", err)
+		addError(fmt.Errorf("读取文件失败 %v", err))
 	}
 
 	return len(data), data
@@ -30,7 +30,7 @@ func getAllDocs(dir string) []dirElement {
 
 	glob_result, err := filepath.Glob(dir)
 	if err != nil {
-		fmt.Println("在处理通配符时出错，检查通配符是否正确", err)
+		addError(fmt.Errorf("在处理通配符时出错，检查通配符是否正确 %v", err))
 		return nil
 	}
 
@@ -39,7 +39,8 @@ func getAllDocs(dir string) []dirElement {
 		err := filepath.Walk(dir_1, func(path string, info os.FileInfo, err error) error {
 
 			if err != nil {
-				fmt.Println("filepath.Walk 游走文件出错:", err)
+				addError(fmt.Errorf("filepath.Walk 游走文件出错 %v", err))
+				return nil
 			}
 
 			depth := len(strings.Split(path, string(os.PathSeparator)))
@@ -56,7 +57,7 @@ func getAllDocs(dir string) []dirElement {
 		})
 
 		if err != nil {
-			fmt.Println("filepath.Walk 遍历目录时出错:", err)
+			addError(fmt.Errorf("filepath.Walk 遍历目录时出错 %v", err))
 		}
 	}
 
@@ -68,7 +69,7 @@ func getSubDirs(dir string) []string {
 
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
-		fmt.Println("读取文件时出错:", err)
+		addError(fmt.Errorf("*错误："+"读取文件时出错 %v", err))
 	}
 
 	for _, file := range files {

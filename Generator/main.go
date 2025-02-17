@@ -34,14 +34,14 @@ InvFileLocker originally v` + VERSION)
 
 	//关于列
 	about_tips := widget.NewButton("关于本软件", func() {
-		dialog.NewInformation("关于本软件", "", w).Show()
+		dialog.NewInformation("关于本软件", "InvFileLocker 的部分功能可能与某些不合法的加密器解密器类似，但实际上有本质区别，InvFileLocker 开发者团队坚决抵制任何犯罪行为，任何利用该软件谋取不正当利益的行为均与开发者无关. ", w).Show()
 	})
 	about_row := container.NewBorder(nil, nil, about_tips, nil, nil) //左右中
 
 	//加密算法列
 	aes_min_input_tips := widget.NewLabel("非对称/对称加密算法临界值:")
 	aes_min_input_tips_tips := widget.NewButton("?", func() {
-		dialog.NewInformation("非对称/对称加密算法临界值", "以 KB 为单位的值."+endll+"当文件大小小于该值时，使用不可逆的 RSA 算法加密文件，防止加密文件被逆向."+endll+"当文件大小小于该值时，使用快速的 AES 算法加密文件，避免文件加密速度过长", w).Show()
+		dialog.NewInformation("非对称/对称加密算法临界值", "以 KB 为单位的值."+endll+"当文件大小小于该值时，使用不可逆的 RSA 算法加密文件，防止加密文件被逆向."+endll+"当文件大小小于该值时，使用快速的 AES 算法加密文件，避免文件加密速度过长"+endll+"如果你不知道这个是干嘛的，请保持默认", w).Show()
 	})
 	aes_min_input := widget.NewEntry()
 	aes_min_input.SetPlaceHolder("文件大小大于该值，使用对称加密算法")

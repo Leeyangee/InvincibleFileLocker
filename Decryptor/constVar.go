@@ -10,3 +10,5 @@ var IS_DEBUG bool = false
 
 var ENC_FILE_FIND int64 = 0
 var ENC_FILE_DECRYPTED int64 = 0
+
+var endl = "\n"

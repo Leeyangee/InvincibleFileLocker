@@ -57,6 +57,7 @@ func getAllDocs(dir string) []dirElement {
 
 		if err != nil {
 			fmt.Println("filepath.Walk 遍历目录时出错:", err)
+			continue
 		}
 	}
 

