@@ -1,13 +1,13 @@
-# InvFileLocker
+# InvincibleFileLocker
 
 <a href="LICENSE"><img src="https://img.shields.io/badge/协议-GPL v3.0-blue" alt=""/></a>&nbsp;
 <a href=""><img src="https://img.shields.io/badge/语言-golang-blue" alt=""/></a>&nbsp;
 
-InvFileLocker 是一个专门用于保护个人隐私的加密/解密器的生成器，旨在用于保护文件被黑客窃取，一键通过GUI界面一键可生成加密器解密器. 
+InvincibleFileLocker 是一个专门用于保护个人隐私的加密/解密器的生成器，旨在用于保护文件被黑客窃取，一键通过GUI界面一键可生成加密器解密器. 
 
 ![](/resources/generate_show_small.gif)
 
-## 为什么使用 InvFileLocker
+## 为什么使用 InvincibleFileLocker
 
 1. 一键生成加密解密器，一键加密/解密
 2. 逻辑简单，特征简单，不会被杀软误判为病毒
